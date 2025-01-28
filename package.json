@@ -7,7 +7,8 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack --watch --progress --config webpack.config.js",
-    "build": "webpack --config webpack.config.js"
+    "build": "npm run generate-icons && webpack --config webpack.config.js",
+    "generate-icons": "node scripts/generate-icons.js"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.1",
@@ -32,6 +33,7 @@
     "mini-css-extract-plugin": "^2.9.2",
     "postcss": "^8.4.31",
     "postcss-loader": "^7.3.3",
+    "sharp": "^0.33.5",
     "style-loader": "^3.3.3",
     "tailwindcss": "^3.4.1",
     "ts-loader": "^9.4.2",

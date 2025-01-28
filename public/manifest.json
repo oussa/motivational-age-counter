@@ -1,15 +1,21 @@
 {
   "manifest_version": 3,
-  "name": "Age Countdown",
+  "name": "Motivational Age Counter",
   "version": "1.0.0",
-  "description": "Shows your real-time age with 10 decimal digits",
+  "description": "A Chrome extension that shows your real-time age with a motivational message",
+  "author": "Oussama Krifa",
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
   "permissions": [
     "storage"
   ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
   }
 } 

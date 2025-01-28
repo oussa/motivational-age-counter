@@ -37,3 +37,7 @@ yarn-error.log*
 *.crx
 *.pem
 *.zip 
+
+public/icon16.png
+public/icon48.png
+public/icon128.png

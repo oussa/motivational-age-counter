@@ -1,6 +1,6 @@
 # Motivational Age Counter Chrome Extension
 
-![Motivational Age Counter Chrome Extension](./logo.svg)
+![Motivational Age Counter Chrome Extension](./public/icon.svg)
 
 ### Features:
 - [x] Display age counter with customizable number of decimal digits

@@ -1,10 +1,11 @@
 const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-  mode: 'production',
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+  devtool: 'cheap-source-map',
   entry: {
     newtab: './src/newtab.tsx',
   },
@@ -17,45 +18,49 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+            },
+          },
+        ],
         exclude: /node_modules/,
       },
       {
-        test: /\.css$/i,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader',
-        ],
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
       },
     ],
-  },
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-    },
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/newtab.html',
       filename: 'newtab.html',
       chunks: ['newtab'],
-      cache: false,
-      inject: true,
-    }),
-    new CopyPlugin({
-      patterns: [
-        { from: 'public', to: '.' },
-      ],
     }),
     new MiniCssExtractPlugin({
-      filename: 'styles.[contenthash:8].css',
+      filename: 'styles.[contenthash].css',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'public/manifest.json', to: 'manifest.json' },
+        { from: 'public/*.png', to: '[name][ext]' },
+      ],
     }),
   ],
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
   optimization: {
     splitChunks: {
       chunks: 'all',
     },
+    minimize: true,
+    usedExports: true,
   },
 }; 

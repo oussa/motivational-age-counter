@@ -1,0 +1,40 @@
+name: Build Extension
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build extension
+      run: npm run build
+
+    - name: Create ZIP file
+      run: |
+        cd dist
+        zip -r ../extension.zip *
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: extension
+        path: extension.zip
+        retention-days: 5 
