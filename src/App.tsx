@@ -8,6 +8,7 @@ interface Settings {
   mainTextColor: string;
   settingsTextColor: string;
   theme: 'light' | 'dark' | 'random';
+  decimalDigits: number;
 }
 
 const themes = {
@@ -40,7 +41,8 @@ const defaultSettings: Settings = {
   backgroundColor: themes.dark.backgroundColor,
   mainTextColor: themes.dark.mainTextColor,
   settingsTextColor: themes.dark.settingsTextColor,
-  theme: 'dark'
+  theme: 'dark',
+  decimalDigits: 9
 };
 
 const SettingsPopup: React.FC<{
@@ -268,6 +270,23 @@ const SettingsPopup: React.FC<{
               />
             </div>
           </div>
+
+          <div style={{ marginBottom: '0.8rem' }}>
+            <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.2rem', color: '#000000' }}>Decimal Digits</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+              <input
+                type="range"
+                min="8"
+                max="10"
+                value={localSettings.decimalDigits}
+                onChange={(e) => handleChange('decimalDigits', e.target.value)}
+                style={{ flex: 1 }}
+              />
+              <span style={{ fontSize: '0.85rem', color: '#000000', minWidth: '24px' }}>
+                {localSettings.decimalDigits}
+              </span>
+            </div>
+          </div>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
@@ -354,7 +373,7 @@ export const App: React.FC<AppProps> = () => {
         const birthDate = new Date(birthday);
         const now = new Date();
         const ageInYears = (now.getTime() - birthDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000);
-        setAge(ageInYears.toFixed(8));
+        setAge(ageInYears.toFixed(settings.decimalDigits));
       };
 
       updateAge();
@@ -362,7 +381,7 @@ export const App: React.FC<AppProps> = () => {
 
       return () => clearInterval(interval);
     }
-  }, [birthday]);
+  }, [birthday, settings.decimalDigits]);
 
   const handleSave = (date: string) => {
     chrome.storage.local.set({ birthday: date }, () => {
@@ -414,6 +433,10 @@ export const App: React.FC<AppProps> = () => {
     fontWeight: 'bold',
     marginTop: '1rem',
     color: settings.mainTextColor,
+    fontFamily: 'Menlo, Monaco, "Courier New", monospace',
+    width: '400px',
+    textAlign: 'center',
+    letterSpacing: '2px',
   };
 
   const saveButtonStyle: React.CSSProperties = {
