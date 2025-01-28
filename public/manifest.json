@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Age Countdown",
+  "version": "1.0.0",
+  "description": "Shows your real-time age with 10 decimal digits",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+} 
