@@ -1,6 +1,7 @@
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   mode: 'production',
@@ -12,26 +13,28 @@ module.exports = {
     filename: '[name].js',
     clean: true,
   },
-  resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
-  },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        use: [
-          {
-            loader: 'ts-loader',
-            options: {
-              compilerOptions: {
-                noEmit: false,
-              },
-            },
-          },
-        ],
+        use: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.css$/i,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader',
+        ],
+      },
     ],
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -39,12 +42,15 @@ module.exports = {
       filename: 'newtab.html',
       chunks: ['newtab'],
       cache: false,
-      inject: 'body',
+      inject: true,
     }),
-    new CopyWebpackPlugin({
+    new CopyPlugin({
       patterns: [
-        { from: 'public' }
+        { from: 'public', to: '.' },
       ],
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'styles.[contenthash:8].css',
     }),
   ],
   optimization: {

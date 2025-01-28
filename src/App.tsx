@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Button } from "./components/ui/button"
+import { Input } from "./components/ui/input"
 
 interface AppProps {}
 
@@ -8,6 +10,7 @@ interface Settings {
   mainTextColor: string;
   theme: 'light' | 'dark' | 'random';
   decimalDigits: number;
+  tabName: string;
 }
 
 const themes = {
@@ -52,11 +55,12 @@ const getRandomTheme = () => {
 };
 
 const defaultSettings: Settings = {
-  text: '',
+  text: 'Make every moment count!',
   backgroundColor: themes.dark.backgroundColor,
   mainTextColor: themes.dark.mainTextColor,
   theme: 'dark',
-  decimalDigits: 10
+  decimalDigits: 10,
+  tabName: 'Motivational Age Counter'
 };
 
 const SettingsPopup: React.FC<{
@@ -159,176 +163,136 @@ const SettingsPopup: React.FC<{
           .hover-underline:hover {
             text-decoration: underline !important;
           }
+          .save-button:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+            transition: all 0.2s ease;
+          }
         `}
       </style>
-      <div id="settings-popup" style={settingsPopupStyle}>
-        <h2 style={{ margin: '0 0 0.8rem 0', fontSize: '1rem', color: '#000000' }}>Customize Text</h2>
-        <div style={{ marginBottom: '0.8rem' }}>
-          <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.2rem', color: '#000000' }}>Text</label>
-          <input
+      <div id="settings-popup" className="fixed bottom-20 left-5 bg-white p-4 rounded-lg shadow-lg z-50 w-64 max-h-[calc(100vh-120px)] overflow-y-auto text-sm">
+        <h2 className="m-0 mb-3 text-base font-medium text-neutral-900">Customize Text</h2>
+        
+        <div className="mb-3">
+          <label className="block mb-1 text-sm text-neutral-800">Tab Name</label>
+          <Input
             type="text"
-            value={localSettings.text}
-            onChange={(e) => handleChange('text', e.target.value)}
-            style={inputStyle}
+            value={localSettings.tabName}
+            onChange={(e) => handleChange('tabName', e.target.value)}
+            className="bg-white text-neutral-900"
           />
         </div>
 
-        <h2 style={{ margin: '0.8rem 0', fontSize: '1rem', color: '#000000' }}>Customize Colors</h2>
-        <div style={{ marginBottom: '0.8rem' }}>
-          <div>
-            <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.2rem', color: '#000000' }}>Theme</label>
-            <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.8rem' }}>
-              {['light', 'dark', 'random'].map((theme) => {
-                let buttonStyle: React.CSSProperties = {
-                  padding: '0.4rem 0.8rem',
-                  border: '1px solid #000000',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '0.85rem',
-                  flex: 1,
-                };
+        <div className="mb-3">
+          <label className="block mb-1 text-sm text-neutral-800">Text</label>
+          <Input
+            type="text"
+            value={localSettings.text}
+            onChange={(e) => handleChange('text', e.target.value)}
+            className="bg-white text-neutral-900"
+          />
+        </div>
 
-                if (theme === 'light') {
-                  buttonStyle = {
-                    ...buttonStyle,
-                    background: '#FAF7F5',
-                    color: '#000000',
-                  };
-                } else if (theme === 'dark') {
-                  buttonStyle = {
-                    ...buttonStyle,
-                    background: '#000000',
-                    color: '#FAF7F5',
-                  };
-                } else if (theme === 'random') {
-                  buttonStyle = {
-                    ...buttonStyle,
-                    background: 'linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(187,165,45,1) 25%, rgba(212,39,80,1) 50%, rgba(54,120,253,1) 75%, rgba(252,69,200,1) 100%)',
-                    color: '#FAF7F5',
-                  };
+        <h2 className="my-3 text-base font-medium text-neutral-900">Customize Colors</h2>
+        
+        <div className="mb-3">
+          <label className="block mb-1 text-sm text-neutral-800">Theme</label>
+          <div className="flex gap-2 mb-3">
+            {['light', 'dark', 'random'].map((theme) => (
+              <Button
+                key={theme}
+                variant={localSettings.theme === theme ? "default" : "outline"}
+                onClick={() => handleChange('theme', theme)}
+                className={
+                  theme === 'light' ? 'bg-white text-neutral-900 border-neutral-200 hover:bg-neutral-100' :
+                  theme === 'dark' ? 'bg-neutral-900 text-white border-neutral-700 hover:bg-neutral-800' :
+                  'bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:opacity-90'
                 }
-
-                if (localSettings.theme === theme) {
-                  buttonStyle.border = '2px solid #007AFF';
-                }
-
-                return (
-                  <button
-                    key={theme}
-                    onClick={() => handleChange('theme', theme)}
-                    style={buttonStyle}
-                  >
-                    {theme.charAt(0).toUpperCase() + theme.slice(1)}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: '0.6rem' }}>
-            <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.2rem', color: '#000000' }}>Background color</label>
-            <div style={{ display: 'flex', gap: '0.4rem' }}>
-              <input
-                type="text"
-                value={localSettings.backgroundColor}
-                onChange={(e) => handleChange('backgroundColor', e.target.value)}
-                style={{ ...inputStyle, flex: 1 }}
-              />
-              <input
-                type="color"
-                value={localSettings.backgroundColor}
-                onChange={(e) => handleChange('backgroundColor', e.target.value)}
-                style={{ width: '40px', padding: 0, cursor: 'pointer' }}
-              />
-            </div>
-          </div>
-
-          <div style={{ marginBottom: '0.6rem' }}>
-            <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.2rem', color: '#000000' }}>Main text color</label>
-            <div style={{ display: 'flex', gap: '0.4rem' }}>
-              <input
-                type="text"
-                value={localSettings.mainTextColor}
-                onChange={(e) => handleChange('mainTextColor', e.target.value)}
-                style={{ ...inputStyle, flex: 1 }}
-              />
-              <input
-                type="color"
-                value={localSettings.mainTextColor}
-                onChange={(e) => handleChange('mainTextColor', e.target.value)}
-                style={{ width: '40px', padding: 0, cursor: 'pointer' }}
-              />
-            </div>
-          </div>
-
-          <div style={{ marginBottom: '0.8rem' }}>
-            <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.2rem', color: '#000000' }}>Decimal Digits</label>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-              <input
-                type="range"
-                min="8"
-                max="12"
-                value={localSettings.decimalDigits}
-                onChange={(e) => handleChange('decimalDigits', e.target.value)}
-                style={{ flex: 1 }}
-              />
-              <span style={{ fontSize: '0.85rem', color: '#000000', minWidth: '24px' }}>
-                {localSettings.decimalDigits}
-              </span>
-            </div>
+              >
+                {theme.charAt(0).toUpperCase() + theme.slice(1)}
+              </Button>
+            ))}
           </div>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-          <button
+        <div className="mb-3">
+          <label className="block mb-1 text-sm text-neutral-800">Background color</label>
+          <div className="flex gap-2">
+            <Input
+              type="text"
+              value={localSettings.backgroundColor}
+              onChange={(e) => handleChange('backgroundColor', e.target.value)}
+              className="bg-white text-neutral-900"
+            />
+            <input
+              type="color"
+              value={localSettings.backgroundColor}
+              onChange={(e) => handleChange('backgroundColor', e.target.value)}
+              className="w-10 p-0 cursor-pointer"
+            />
+          </div>
+        </div>
+
+        <div className="mb-3">
+          <label className="block mb-1 text-sm text-neutral-800">Main text color</label>
+          <div className="flex gap-2">
+            <Input
+              type="text"
+              value={localSettings.mainTextColor}
+              onChange={(e) => handleChange('mainTextColor', e.target.value)}
+              className="bg-white text-neutral-900"
+            />
+            <input
+              type="color"
+              value={localSettings.mainTextColor}
+              onChange={(e) => handleChange('mainTextColor', e.target.value)}
+              className="w-10 p-0 cursor-pointer"
+            />
+          </div>
+        </div>
+
+        <div className="mb-3">
+          <label className="block mb-1 text-sm text-neutral-800">Decimal Digits</label>
+          <div className="flex items-center gap-3">
+            <input
+              type="range"
+              min="8"
+              max="10"
+              value={localSettings.decimalDigits}
+              onChange={(e) => handleChange('decimalDigits', e.target.value)}
+              className="flex-1"
+            />
+            <span className="text-sm text-neutral-900 min-w-[24px]">
+              {localSettings.decimalDigits}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Button
             onClick={() => {
               onSave(localSettings);
               onClose();
             }}
-            style={{
-              padding: '0.3rem',
-              backgroundColor: '#007AFF',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '0.85rem',
-            }}
           >
             Save Preferences
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="ghost"
             onClick={onChangeBirthday}
-            className="hover-underline"
-            style={{
-              padding: '0.3rem',
-              backgroundColor: 'transparent',
-              color: '#ff4444',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '0.85rem',
-              textDecoration: 'none',
-            }}
+            className="text-blue-500 hover:text-blue-600"
           >
             Change Birthday
-          </button>
+          </Button>
         </div>
 
-        <div style={{ textAlign: 'center', marginTop: '1.2rem', fontSize: '0.85rem', color: '#666' }}>
+        <div className="text-center mt-5 text-sm text-neutral-500">
           <a 
             href="https://oussama.io" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="hover-underline"
-            style={{
-              color: '#666',
-              textDecoration: 'none',
-            }}
+            className="text-neutral-500 hover:underline"
           >
             Created by Oussama.io
           </a>
@@ -340,24 +304,30 @@ const SettingsPopup: React.FC<{
 
 export const App: React.FC<AppProps> = () => {
   const [birthday, setBirthday] = useState<string | null>(null);
-  const [tempBirthday, setTempBirthday] = useState<string>('');
   const [age, setAge] = useState<string>('');
   const [showSettings, setShowSettings] = useState(false);
+  const [showBirthdayInput, setShowBirthdayInput] = useState(false);
   const [settings, setSettings] = useState<Settings>(defaultSettings);
 
   useEffect(() => {
     // Load birthday and settings from storage
-    chrome.storage.local.get(['birthday', 'settings'], (result) => {
+    chrome.storage.local.get(['birthday', 'settings', 'showBirthdayInput'], (result) => {
       if (result.birthday) {
         setBirthday(result.birthday);
       }
       if (result.settings) {
         setSettings(result.settings);
       }
+      if (result.showBirthdayInput) {
+        setShowBirthdayInput(true);
+      }
     });
 
-    // Update body background color
+    // Update body background color and tab title
     document.body.style.backgroundColor = settings.backgroundColor;
+    if (settings.tabName) {
+      document.title = settings.tabName;
+    }
   }, [settings]);
 
   useEffect(() => {
@@ -377,8 +347,14 @@ export const App: React.FC<AppProps> = () => {
   }, [birthday, settings.decimalDigits]);
 
   const handleSave = (date: string) => {
-    chrome.storage.local.set({ birthday: date }, () => {
+    console.log('Saving date:', date);
+    chrome.storage.local.set({ 
+      birthday: date,
+      showBirthdayInput: false 
+    }, () => {
+      console.log('Birthday saved:', date);
       setBirthday(date);
+      setShowBirthdayInput(false);
     });
   };
 
@@ -405,6 +381,7 @@ export const App: React.FC<AppProps> = () => {
     marginBottom: '1rem',
     width: '200px',
     textAlign: 'center',
+    display: 'block',
   };
 
   const settingsButtonStyle: React.CSSProperties = {
@@ -440,68 +417,100 @@ export const App: React.FC<AppProps> = () => {
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
-    marginTop: '1rem',
+    display: 'block',
+    width: '200px',
+    margin: '1rem auto 0',
   };
 
-  if (!birthday) {
+  if (!birthday || showBirthdayInput) {
     return (
-      <div style={containerStyle}>
-        <h1 style={{ color: settings.mainTextColor }}>Hi. Set here your birthday</h1>
-        <input
-          type="date"
-          style={inputStyle}
-          value={tempBirthday}
-          onChange={(e) => setTempBirthday(e.target.value)}
-        />
-        <button
-          style={saveButtonStyle}
-          onClick={() => tempBirthday && handleSave(tempBirthday)}
-          disabled={!tempBirthday}
+      <div 
+        className="flex flex-col items-center justify-center min-h-screen p-8 w-full max-w-7xl mx-auto"
+        style={{ 
+          backgroundColor: settings.backgroundColor,
+          color: settings.mainTextColor 
+        }}
+      >
+        <h1 className="text-4xl font-bold mb-8" style={{ color: settings.mainTextColor }}>
+          Welcome to Age Counter
+        </h1>
+        <div className="text-lg mb-6 text-center" style={{ color: settings.mainTextColor }}>
+          Please enter your birthday to get started
+        </div>
+        <form 
+          onSubmit={(e) => {
+            e.preventDefault();
+            const input = e.currentTarget.querySelector('input[type="date"]') as HTMLInputElement;
+            const date = input?.value;
+            if (date) {
+              handleSave(date);
+            }
+          }}
+          className="flex flex-col items-center gap-6 max-w-xs"
         >
-          Save
-        </button>
+          <div className="w-40">
+            <input
+              type="date"
+              defaultValue={birthday || undefined}
+              className="flex h-11 w-full rounded-md border px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              style={{
+                backgroundColor: settings.backgroundColor,
+                color: settings.mainTextColor,
+                borderColor: settings.mainTextColor + '40'
+              }}
+            />
+          </div>
+          <Button
+            type="submit"
+            className="w-40 h-11 text-base font-medium"
+            style={{
+              backgroundColor: settings.mainTextColor,
+              color: settings.backgroundColor
+            }}
+          >
+            Continue
+          </Button>
+        </form>
       </div>
     );
   }
 
   return (
-    <>
-      <style>
-        {`
-          .hover-underline:hover {
-            text-decoration: underline !important;
-          }
-        `}
-      </style>
-      <div style={containerStyle}>
-        <div style={{ 
-          fontSize: '3rem', 
-          marginBottom: '0.5rem',
-          color: settings.mainTextColor,
-          letterSpacing: '3px',
-          textAlign: 'center',
-          fontWeight: 'bold',
-        }}>
-          {settings.text}
-        </div>
-        <div style={ageStyle}>{age}</div>
+    <div 
+      className="flex flex-col items-center p-8 w-full max-w-7xl font-sans"
+      style={{ 
+        backgroundColor: settings.backgroundColor,
+        color: settings.mainTextColor 
+      }}
+    >
+      <div className="text-5xl mb-2 tracking-wide text-center font-bold" style={{ color: settings.mainTextColor }}>
+        {settings.text}
       </div>
-      <button
+      <div className="text-5xl font-bold mt-4 font-mono w-[400px] text-center tracking-wider" style={{ color: settings.mainTextColor }}>
+        {age}
+      </div>
+      <Button
         id="settings-button"
-        className="hover-underline"
-        style={settingsButtonStyle}
-        onClick={() => setShowSettings(true)}
+        variant="link"
+        className="fixed bottom-5 left-5 p-0"
+        style={{ color: settings.mainTextColor }}
+        onClick={() => setShowSettings(!showSettings)}
       >
         Settings
-      </button>
+      </Button>
       {showSettings && (
         <SettingsPopup
           settings={settings}
           onSave={handleSettingsSave}
           onClose={() => setShowSettings(false)}
-          onChangeBirthday={() => handleSave('')}
+          onChangeBirthday={() => {
+            chrome.storage.local.set({ showBirthdayInput: true }, () => {
+              setShowBirthdayInput(true);
+              setShowSettings(false);
+            });
+          }}
         />
       )}
-    </>
+    </div>
   );
 };
