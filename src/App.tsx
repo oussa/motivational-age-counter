@@ -6,7 +6,6 @@ interface Settings {
   text: string;
   backgroundColor: string;
   mainTextColor: string;
-  settingsTextColor: string;
   theme: 'light' | 'dark' | 'random';
   decimalDigits: number;
 }
@@ -14,35 +13,50 @@ interface Settings {
 const themes = {
   light: {
     backgroundColor: '#FFFFFF',
-    mainTextColor: '#000000',
-    settingsTextColor: '#000000'
+    mainTextColor: '#000000'
   },
   dark: {
     backgroundColor: '#1F1F1F',
-    mainTextColor: '#DFDFDF',
-    settingsTextColor: '#DFDFDF'
+    mainTextColor: '#DFDFDF'
   }
 };
 
 const getRandomTheme = () => {
-  const colors = [
-    { bg: '#2C3E50', main: '#ECF0F1', settings: '#ECF0F1' },
-    { bg: '#E74C3C', main: '#FFFFFF', settings: '#FFFFFF' },
-    { bg: '#27AE60', main: '#FFFFFF', settings: '#FFFFFF' },
-    { bg: '#8E44AD', main: '#FFFFFF', settings: '#FFFFFF' },
-    { bg: '#2980B9', main: '#FFFFFF', settings: '#FFFFFF' }
-  ];
-  const randomIndex = Math.floor(Math.random() * colors.length);
-  return colors[randomIndex];
+  // Convert HSL to RGB
+  const hslToHex = (h: number, s: number, l: number): string => {
+    l /= 100;
+    const a = s * Math.min(l, 1 - l) / 100;
+    const f = (n: number) => {
+      const k = (n + h / 30) % 12;
+      const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+      return Math.round(255 * color).toString(16).padStart(2, '0');
+    };
+    return `#${f(0)}${f(8)}${f(4)}`;
+  };
+
+  // Generate a random color in HSL then convert to hex
+  const getRandomColor = (isBackground: boolean) => {
+    const h = Math.floor(Math.random() * 360);
+    const s = Math.floor(Math.random() * 30) + 70; // 70-100% saturation for vibrant colors
+    // Different lightness ranges for background and text to ensure contrast
+    const l = isBackground 
+      ? Math.floor(Math.random() * 30) + 15  // 15-45% lightness for darker backgrounds
+      : Math.floor(Math.random() * 20) + 80; // 80-100% lightness for lighter text
+    return hslToHex(h, s, l);
+  };
+
+  const bg = getRandomColor(true);   // Generate dark background
+  const main = getRandomColor(false); // Generate light text color
+
+  return { bg, main };
 };
 
 const defaultSettings: Settings = {
   text: '',
   backgroundColor: themes.dark.backgroundColor,
   mainTextColor: themes.dark.mainTextColor,
-  settingsTextColor: themes.dark.settingsTextColor,
   theme: 'dark',
-  decimalDigits: 9
+  decimalDigits: 10
 };
 
 const SettingsPopup: React.FC<{
@@ -78,14 +92,12 @@ const SettingsPopup: React.FC<{
           ...newSettings,
           backgroundColor: themes.light.backgroundColor,
           mainTextColor: themes.light.mainTextColor,
-          settingsTextColor: themes.light.settingsTextColor,
         };
       } else if (value === 'dark') {
         newSettings = {
           ...newSettings,
           backgroundColor: themes.dark.backgroundColor,
           mainTextColor: themes.dark.mainTextColor,
-          settingsTextColor: themes.dark.settingsTextColor,
         };
       } else if (value === 'random') {
         const randomTheme = getRandomTheme();
@@ -93,7 +105,6 @@ const SettingsPopup: React.FC<{
           ...newSettings,
           backgroundColor: randomTheme.bg,
           mainTextColor: randomTheme.main,
-          settingsTextColor: randomTheme.settings,
         };
       }
       // Immediately save theme changes
@@ -253,31 +264,13 @@ const SettingsPopup: React.FC<{
             </div>
           </div>
 
-          <div style={{ marginBottom: '0.6rem' }}>
-            <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.2rem', color: '#000000' }}>Settings text color</label>
-            <div style={{ display: 'flex', gap: '0.4rem' }}>
-              <input
-                type="text"
-                value={localSettings.settingsTextColor}
-                onChange={(e) => handleChange('settingsTextColor', e.target.value)}
-                style={{ ...inputStyle, flex: 1 }}
-              />
-              <input
-                type="color"
-                value={localSettings.settingsTextColor}
-                onChange={(e) => handleChange('settingsTextColor', e.target.value)}
-                style={{ width: '40px', padding: 0, cursor: 'pointer' }}
-              />
-            </div>
-          </div>
-
           <div style={{ marginBottom: '0.8rem' }}>
             <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.2rem', color: '#000000' }}>Decimal Digits</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
               <input
                 type="range"
                 min="8"
-                max="10"
+                max="12"
                 value={localSettings.decimalDigits}
                 onChange={(e) => handleChange('decimalDigits', e.target.value)}
                 style={{ flex: 1 }}
@@ -421,7 +414,7 @@ export const App: React.FC<AppProps> = () => {
     fontSize: '1rem',
     padding: '0.5rem',
     backgroundColor: 'transparent',
-    color: settings.settingsTextColor,
+    color: settings.mainTextColor,
     border: 'none',
     cursor: 'pointer',
     zIndex: 100,
