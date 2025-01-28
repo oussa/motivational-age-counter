@@ -1,7 +1,10 @@
 {
-  "name": "age-countdown-newtab-extension",
+  "name": "motivational-age-counter-newtab-extension",
   "version": "1.0.0",
-  "description": "Chrome extension that shows real-time age with 10 decimal digits",
+  "description": "Chrome extension that shows real-time age and a motivational text",
+  "homepage": "https://github.com/oussa/motivational-age-counter",
+  "author": "Oussama Krifa",
+  "license": "MIT",
   "scripts": {
     "start": "webpack --watch --progress --config webpack.config.js",
     "build": "webpack --config webpack.config.js"
