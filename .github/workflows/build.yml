@@ -27,13 +27,17 @@ jobs:
     - name: Build extension
       run: npm run build
 
-    - name: Create ZIP file
-      working-directory: dist
-      run: zip -FSr ../extension.zip *
+    - name: Zip dist Folder
+      run: |
+        # Navigate into the dist directory
+        cd dist
+        # Zip all contents and place the zip file in the root directory
+        zip -r ../dist.zip ./*
 
-    - name: Upload build artifact
+    # Upload the zip file as an artifact
+    - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: extension
-        path: extension.zip
-        retention-days: 5 
+        path: dist.zip
+        retention-days: 5
