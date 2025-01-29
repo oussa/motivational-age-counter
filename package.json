@@ -1,7 +1,7 @@
 {
-  "name": "motivational-age-counter-newtab-extension",
-  "version": "1.0.0",
-  "description": "Chrome extension that shows real-time age and a motivational text",
+  "name": "motivational-age-counter",
+  "version": "1.1.0",
+  "description": "A Browser Extension that shows your real-time age with a motivational message",
   "homepage": "https://github.com/oussa/motivational-age-counter",
   "author": "Oussama Krifa",
   "license": "MIT",
