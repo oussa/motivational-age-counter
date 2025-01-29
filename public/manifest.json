@@ -4,6 +4,12 @@
   "version": "1.0.0",
   "description": "A Chrome extension that shows your real-time age with a motivational message",
   "author": "Oussama Krifa",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "motivationalagecounter@oussama.io",
+      "strict_min_version": "58.0"
+    }
+  },
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
