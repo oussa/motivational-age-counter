@@ -123,10 +123,10 @@ export const App: React.FC<AppProps> = () => {
         color: settings.mainTextColor 
       }}
     >
-      <div className="text-5xl mb-2 tracking-wide text-center font-bold" style={{ color: settings.mainTextColor }}>
+      <div className="text-[4em] mb-2 text-center font-bold tracking-[3px] leading-normal" style={{ color: settings.mainTextColor }}>
         {settings.text}
       </div>
-      <div className="text-5xl font-bold mt-4 font-mono text-center tracking-wider" style={{ color: settings.mainTextColor }}>
+      <div className="text-[4em] font-bold mt-4 font-mono text-center tracking-wider" style={{ color: settings.mainTextColor }}>
         {age}
       </div>
       <Button
