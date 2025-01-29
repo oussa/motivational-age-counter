@@ -191,7 +191,7 @@ export const SettingsPopup: React.FC<SettingsPopupProps> = ({
           rel="noopener noreferrer"
           className="text-neutral-500 hover:underline"
         >
-          Created by Oussama.io
+          Created by oussama.io
         </a>
       </div>
     </div>
