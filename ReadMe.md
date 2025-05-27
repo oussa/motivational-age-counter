@@ -21,11 +21,16 @@ Motivational Age Counter is a NewTab extension. It keeps you motivated to work o
 - [x] Light / Dark Themes
 - [x] Random Color Combinations to suit your mood
 - [x] Customize NewTab name
+- [x] Add ideas and goals
+- [x] Swap an idea/goal with the main motivational text
 
 ### Getting Started:
 1. Clone the repository
 2. Run `npm install`
-3. Run `npm run build`
+3. Run `npm run start` to start the dev server
+    - This will watch changes and have a `dist` folder with the latest extension files
+4. Run `npm run build` to build the extension
+    - This will create a `dist` folder with the extension files
 4. Load the extension in Chrome
     - Open Chrome and go to `chrome://extensions/`
     - Enable Developer Mode
